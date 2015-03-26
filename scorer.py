@@ -1,20 +1,25 @@
+import os
 from sys import version_info
 import requests
 from bs4 import BeautifulSoup
-if version_info.major is 2:
-    import pynotify
-    notifyModule = "pynotify"
-if version_info.major is 3:
-    try:
-        from gi.Repository import Notify
-        notifyModule = "Notify"
-    except ImportError:
-        import notify2
-        notifyModule = "notify2"
 from time import sleep
 import logging
 
 logging.basicConfig(level=logging.DEBUG)
+
+# The notifier function
+def notify(title, subtitle, message):
+    t = '-title {!r}'.format(title)
+    s = '-subtitle {!r}'.format(subtitle)
+    m = '-message {!r}'.format(message)
+    os.system('terminal-notifier {}'.format(' '.join([m, t, s])))
+
+"""
+# Calling the function
+notify(title    = 'A Real Notification',
+       subtitle = 'with python',
+       message  = 'Hello, this is me, notifying you!')
+"""
 
 def sendmessage(title, message):
     if notifyModule is "pynotify":
@@ -61,7 +66,7 @@ while True:
         if newscore != score:
             logging.info("This is the most recent score, send me a notification")
             score = newscore
-            sendmessage("Score", score)
+            notify("Score","India vs Aus", score)
         sleep(15)
 
     except KeyboardInterrupt:
@@ -72,3 +77,4 @@ while True:
         else:
             print("Press Ctrl+C again to quit")
             match, interrupted = 0, True
+
